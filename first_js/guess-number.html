@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Guess The Number</title>
+<style>
+    body {
+    font-family: sans-serif;
+    background-color: khaki;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  .container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+  }
+  
+  #input-area {
+    margin-bottom: 20px;
+  }
+  
+  input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #8e93d8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  #output-area {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Guess The Number</h1>
+
+    <div id="input-area">
+      <input type="number" id="guessInput" >
+      <button onclick="checkGuess()">Submit</button>
+    </div>
+
+    <div id="output-area">
+      <p id="message">The number is higher</p> </div>
+
+  </div>
+</body>
+</html>
