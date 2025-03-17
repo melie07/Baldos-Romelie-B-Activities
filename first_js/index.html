@@ -3,47 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>First JS</title>
-
+    <title>Guess The Number</title>
+    <link rel="stylesheet" href="./css/style.css">
     <script>
-        console.log("Hello World!")
-        console.log("message")
-
-        //old
-        var name = "romelie";
-        console.log(name);
-
-        //new
-        const num1 = 5; //constant
-        let num2 = 20;
-        num2 = 50;
-
-        const sum = num1 + num2;
-        const difference = num1 - num2;
-        const product = num1 * num2;
-        const quotient = num1 / num2;
-
-        console.log("The sum is", sum);
-        console.log("The difference is", difference);
-        console.log("The product is", product);
-        console.log("The quotient is", quotient);
-
-        
-        const grade1 = 95;
-        const grade2 = 84;
-        const grade3 = 92;
-        const grade4 = 87;
-        const grade5 = 97;
-
-        const total = grade1 + grade2 + grade3 + grade4 + grade5;
-        const average = total / 5;
-
-        console.log("Total of grades:", total);
-        console.log("Average age of grades:", average);
-
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+        let tries = 5;
     </script>
+    <script src="./js/guess.js"></script>
 </head>
 <body>
-    
+    <div class="game-container">
+        <h1>Guess The Number</h1>
+        <input type="text" id="guess" placeholder="Enter Your Guess">
+        <button type="button" onclick="checkNumber()">GUESS</button>
+        <div id="message">Guess The Number</div>
+        <div id="tries">Tries: 5</div>
+    </div>
 </body>
 </html>
