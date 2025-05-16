@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales - Inventory System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span>|</span>
+                <span>Baldos System</span>
+                <span>|</span>
+            </div>
+            <div class="user-info">
+                <span>Welcome, {{ username }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
+        </header>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Sales Records</h2>
+                <a href="{{ url_for('dashboard') }}" class="btn">Back to Dashboard</a>
+            </div>
+            
+            <div class="summary-card">
+                <div class="summary-item">
+                    <span class="summary-label">Total Sales:</span>
+                    <span class="summary-value">P{{ "%.2f"|format(sales_summary[0] or 0) }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Total Transactions:</span>
+                    <span class="summary-value">{{ sales_summary[1] or 0 }}</span>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Date</th>
+                        <th>Sold By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                        <tr>
+                            <td>{{ sale[0] }}</td>
+                            <td>{{ sale[1] }}</td>
+                            <td>{{ sale[2] }}</td>
+                            <td>P{{ "%.2f"|format(sale[3]) }}</td>
+                            <td>{{ sale[4].strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>{{ sale[5] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

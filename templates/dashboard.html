@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Inventory System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span>|</span>
+                <span>Baldos System</span>
+                <span>|</span>
+            </div>
+            <div class="user-info">
+                <span>Welcome, {{ username }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
+        </header>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="dashboard-summary">
+            <div class="summary-card">
+                <h3>Today's Sales</h3>
+                <div class="summary-content">
+                    <span class="summary-value">P{{ "%.2f"|format(sales_summary[0] or 0) }}</span>
+                    <span class="summary-label">{{ sales_summary[1] or 0 }} transactions</span>
+                </div>
+            </div>
+            
+            <div class="summary-card">
+                <h3>Recent Sales</h3>
+                <div class="recent-sales">
+                    {% if recent_sales %}
+                        <ul>
+                            {% for sale in recent_sales %}
+                                <li>
+                                    <span class="sale-product">{{ sale[1] }}</span>
+                                    <span class="sale-quantity">{{ sale[2] }}x</span>
+                                    <span class="sale-price">P{{ "%.2f"|format(sale[3]) }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No recent sales</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Products</h2>
+                <div>
+                    <a href="{{ url_for('sales') }}" class="btn">View Sales</a>
+                    <a href="{{ url_for('reports') }}" class="btn">View Reports</a>
+                    <button class="btn" onclick="openAddModal()">Add Product</button>
+                </div>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Unit</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product[0] }}</td>
+                            <td>{{ product[1] }}</td>
+                            <td>{{ product[2] }}</td>
+                            <td>P{{ "%.2f"|format(product[3]) }}</td>
+                            <td>{{ product[4] }}</td>
+                            <td>
+                                <button class="action-btn sell-btn" onclick="openSellModal({{ product[0] }})">Sell</button>
+                                <button class="action-btn edit-btn" onclick="openEditModal({{ product[0] }})">Edit</button>
+                                <button class="action-btn delete-btn" onclick="deleteProduct({{ product[0] }})">Delete</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Product</h3>
+                <button class="close-btn" onclick="closeAddModal()">&times;</button>
+            </div>
+            <form id="addForm" action="{{ url_for('add_product') }}" method="POST">
+                <div class="form-group">
+                    <label for="addName">Product Name</label>
+                    <input type="text" id="addName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="addUnit">Unit</label>
+                    <input type="text" id="addUnit" name="unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="addPrice">Price</label>
+                    <input type="number" step="0.01" id="addPrice" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="addQuantity">Quantity</label>
+                    <input type="number" id="addQuantity" name="quantity" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn cancel-btn" onclick="closeAddModal()">Cancel</button>
+                    <button type="submit" class="btn">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Edit Product Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Product</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editForm" action="" method="POST">
+                <div class="form-group">
+                    <label for="editName">Product Name</label>
+                    <input type="text" id="editName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editUnit">Unit</label>
+                    <input type="text" id="editUnit" name="unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPrice">Price</label>
+                    <input type="number" step="0.01" id="editPrice" name="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="editQuantity">Quantity</label>
+                    <input type="number" id="editQuantity" name="quantity" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn cancel-btn" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Sell Product Modal -->
+    <div id="sellModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Sell Product</h3>
+                <button class="close-btn" onclick="closeSellModal()">&times;</button>
+            </div>
+            <form id="sellForm" action="{{ url_for('record_sale') }}" method="POST">
+                <input type="hidden" id="sellProductId" name="product_id">
+                <div class="form-group">
+                    <label for="sellProductName">Product</label>
+                    <input type="text" id="sellProductName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="sellPrice">Unit Price</label>
+                    <input type="number" step="0.01" id="sellPrice" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="sellAvailable">Available Quantity</label>
+                    <input type="number" id="sellAvailable" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="sellQuantity">Quantity to Sell</label>
+                    <input type="number" id="sellQuantity" name="quantity" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="sellTotal">Total Price</label>
+                    <input type="number" step="0.01" id="sellTotal" readonly>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn cancel-btn" onclick="closeSellModal()">Cancel</button>
+                    <button type="submit" class="btn">Record Sale</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Add Product Modal Functions
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'flex';
+        }
+        
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+        }
+        
+        // Edit Product Modal Functions
+        function openEditModal(productId) {
+            fetch(`/get_product/${productId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.error) {
+                        document.getElementById('editName').value = data.name;
+                        document.getElementById('editUnit').value = data.unit;
+                        document.getElementById('editPrice').value = data.price;
+                        document.getElementById('editQuantity').value = data.quantity;
+                        
+                        // Update form action to include the product ID
+                        document.getElementById('editForm').action = `/edit_product/${productId}`;
+                        
+                        document.getElementById('editModal').style.display = 'flex';
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching product data: ' + error.message);
+                });
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // Sell Product Modal Functions
+        function openSellModal(productId) {
+            fetch(`/get_product/${productId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!data.error) {
+                        document.getElementById('sellProductId').value = data.id;
+                        document.getElementById('sellProductName').value = data.name;
+                        document.getElementById('sellPrice').value = data.price;
+                        document.getElementById('sellAvailable').value = data.quantity;
+                        document.getElementById('sellQuantity').max = data.quantity;
+                        document.getElementById('sellQuantity').value = 1;
+                        calculateTotal();
+                        
+                        document.getElementById('sellModal').style.display = 'flex';
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error fetching product data: ' + error.message);
+                });
+        }
+        
+        function closeSellModal() {
+            document.getElementById('sellModal').style.display = 'none';
+        }
+        
+        function calculateTotal() {
+            const quantity = parseInt(document.getElementById('sellQuantity').value) || 0;
+            const price = parseFloat(document.getElementById('sellPrice').value) || 0;
+            const total = quantity * price;
+            document.getElementById('sellTotal').value = total.toFixed(2);
+        }
+        
+        // Listen for quantity changes in sell modal
+        document.getElementById('sellQuantity').addEventListener('input', calculateTotal);
+        
+        // Delete Product Function
+        function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                window.location.href = `/delete_product/${productId}`;
+            }
+        }
+        
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
