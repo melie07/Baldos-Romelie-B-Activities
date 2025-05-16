@@ -7,63 +7,47 @@
 
     <style>
         body {
-            background-color: lightgray;
+            background-color: darkturquoise;
         }
         h1 {
-            color: black;
-            background-color: lightgray;
-
+            color: blue;
+            background-color: khakis 
         }
         p {
-            font-size: 20px;
+            font-size: 30px;
         }
-        #ulabel {
+
+        #ulabel { 
             color: black;
-            background-color: white;
+            background-color: greenyellow;
         }
         #plabel {
             color: black;
-            background-color: white;
+            background-color: greenyellow;
         }
+        p {
+            color:aqua;
+            background-color:blueviolet;
+        }
+
         .border {
-            border: 1px black solid;
+            border: 3px red solid;
         }
-        #hlabel {
-            color:black;
-            background-color: white;
-        }
-        #elabel {
-            color:black;
-            background-color: white ;
-        }
-        input[type=text], input[type=password] {
-            width: 100%;
-            padding: 5px 10px;
-            margin: 4px 0;
-            display: inline-block;
-            border: 1px solid gray;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: lightgray;
-            color: black;
-            padding: 5px 10px;
-            margin: 4px 0;
-            border: none;
-            cursor: pointer;
-            width: 100%;
+
+        .yellow {
+            color: orangered;
+            background-color: blue;
         }
     </style>
 </head>
 <body>
-    <h1 id="hlabel">Login</h1>
+    <h1>Login</h1>
     <br>
-    <h1 id="elabel">This is sample login</h1>
-    <p id="ulabel" class="border yellow">Username: </p>
+    <h1>This is sample login</h1>
+    <p id="ulabel" class="border">Username: </p>
     <input type="text" name="username" id="username">
     <br>
-    <p id="plabel" class="border yellow">Password: </p>
+    <p id="plabel" class="border">Password: </p>
     <input type="password" name="password" id="password">
-    <button type="submit">Login</button>
 </body>
 </html>

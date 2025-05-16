@@ -1,19 +1,15 @@
-function checkOddEven() {
-    let numberInput = document.getElementById("numberInput");
-    let number = parseInt(numberInput.value);
-  
-    if (isNaN(number)) {
-      alert("Please enter a valid number.");
-      return;
+function oddEven() {
+    const inputValue = document.getElementById('oddeven').value;
+    const number =parseInt(inputValue);
+
+    if(isNaN(number)) {
+        document.getElementById('message').textContent ="please enter a valid number!";
+        return;
     }
-  
-    let result = "";
-    if (number % 2 === 0) {
-      result = number + " is even.";
+
+    if (number % 2 ===0) {
+        document.getElementById("messsage").textContent ="even";
     } else {
-      result = number + " is odd.";
+        document.getElementById("message").textContent ="odd";
     }
-  
-    let resultDiv = document.getElementById("result");
-    resultDiv.textContent = result;
-  }
+}

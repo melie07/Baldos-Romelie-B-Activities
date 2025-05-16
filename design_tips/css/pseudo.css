@@ -1,10 +1,11 @@
 .google {
     background-color: blue;
+
 }
 
 .google:hover {
     background-color: red;
-    height: 200px;
+    height: 200px
 }
 
 .google:active {
@@ -16,10 +17,10 @@ a:link {
 }
 
 a:hover {
-    background-color: green;
-    color: greenyellow;
+    background-color:green;
+    color:greenyellow;
 }
 
 a:visited {
-    color: darkorange;
+    color: aqua ;
 }

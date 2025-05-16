@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Inventory System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span>🌸</span>
+                <span>Inventory System</span>
+                <span>🌸</span>
+            </div>
+            <div class="user-info">
+                <span>Welcome, {{ username }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+            </div>
+        </header>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Sales Reports</h2>
+                <a href="{{ url_for('dashboard') }}" class="btn">Back to Dashboard</a>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="dailySalesChart"></canvas>
+            </div>
+            
+            <h3 class="section-title">Daily Sales (Last 30 Days)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Total Sales</th>
+                        <th>Transactions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in daily_sales %}
+                        <tr>
+                            <td>{{ day[0] }}</td>
+                            <td>P{{ "%.2f"|format(day[1]) }}</td>
+                            <td>{{ day[2] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <h3 class="section-title">Product Performance</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity Sold</th>
+                        <th>Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in product_performance %}
+                        <tr>
+                            <td>{{ product[0] }}</td>
+                            <td>{{ product[1] }}</td>
+                            <td>P{{ "%.2f"|format(product[2]) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // Daily Sales Chart
+        const dailySalesData = {
+            labels: [{% for day in daily_sales %}"{{ day[0] }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Daily Sales',
+                data: [{% for day in daily_sales %}{{ day[1] }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                backgroundColor: 'rgba(255, 133, 162, 0.5)',
+                borderColor: 'rgba(255, 133, 162, 1)',
+                borderWidth: 1
+            }]
+        };
+        
+        const dailySalesConfig = {
+            type: 'bar',
+            data: dailySalesData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Daily Sales Trend'
+                    }
+                }
+            }
+        };
+        
+        new Chart(
+            document.getElementById('dailySalesChart'),
+            dailySalesConfig
+        );
+    </script>
+</body>
+</html>
